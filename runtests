@@ -1,0 +1,8 @@
+#!/bin/bash
+for f in ./test/*.ml; do	
+	ocamlfind ocamlc -I ./src/ -I ./test/ -o $f-testrun -package oUnit ./src/talf.cma -linkpkg -g $f
+	echo --------------------------------------------------------------------
+	echo Running test:   $f
+	$f-testrun
+	rm oUnit* ./test/*.cmi ./test/*.cmo $f-testrun
+done
