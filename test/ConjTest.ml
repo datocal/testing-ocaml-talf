@@ -1,6 +1,8 @@
 open OUnit2;;
 open Conj;;
 
+let rec string_of_int_pair = function 
+	a,b -> String.concat "," [(string_of_int a); (string_of_int b)];;
 
 let rec print_list printer = function
 	[] -> ["<-set"]
@@ -9,6 +11,10 @@ let rec print_list printer = function
 let rec print_conj printer= function 
 	Conjunto([]) -> ""
 	| Conjunto(e::l) -> String.concat ", " ((printer e)::(print_list printer l));;
+
+let rec generate list= function 
+	0 -> list
+	|n ->generate (n::list) (n-1);;
 
 let es_vacio_test test_ctxt = 
 	assert_equal 
@@ -25,15 +31,41 @@ let es_vacio_test test_ctxt =
 		~msg: "#1.3 - Check some elements set"
 		~printer: string_of_bool
 		false
-		(es_vacio (Conjunto([1;2;3;5])));
+		(es_vacio (Conjunto(generate [] 50000)))
 ;;
 
 let pertenece_test test_ctxt = 
 	assert_equal
-		~msg: "#2 - Check bellow set"
+		~msg: "#2.1 - Check bellow set"
 		~printer: string_of_bool
 		true
-		(pertenece 1 (Conjunto([1;2;3])));;
+		(pertenece 1 (Conjunto([1;2;3])));
+	assert_equal
+		~msg: "#2.2 - Check not in set"
+		~printer: string_of_bool
+		false
+		(pertenece 4 (Conjunto([1;2;3])));
+	assert_equal
+		~msg: "#2.3 - Check with empty set"
+		~printer: string_of_bool
+		false
+		(pertenece 1 conjunto_vacio);
+	assert_equal
+		~msg: "#2.4 - Check with 1 element in set"
+		~printer: string_of_bool
+		true
+		(pertenece 1 (Conjunto([1])));
+	assert_equal
+		~msg: "#2.5 - Check with 1 char, with the correspondent uppercase in the list"
+		~printer: string_of_bool
+		false
+		(pertenece 'A' (Conjunto(['a'])));
+	assert_equal
+		~msg: "#2.6 - Check with ñ"
+		~printer: string_of_bool
+		true
+		(pertenece "ñ" (Conjunto(["ñ"])));;
+
 
 let agregar_test test_ctxt = 
 	assert_equal
@@ -113,12 +145,12 @@ let list_of_conjunto_test test_ctxt =
 		(list_of_conjunto (Conjunto([1;2;3])));;
 
 let cartesiano_test test_ctxt = 
-	todo "cartesiano not implemented";
 	assert_equal
 		~msg: "#13 - Check cartesiano1"
-		~printer: string_of_bool
-		true
-		true;;
+		~printer: (print_conj string_of_int_pair)
+		~cmp: igual 
+		(Conjunto([1,3;1,4;2,3;2,4]))
+		(cartesiano (Conjunto([1;2])) (Conjunto([3;4])));;
 
 let cartesiano2_test test_ctxt = 
 	todo "cartesiano2 not implemented";
