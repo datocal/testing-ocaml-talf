@@ -69,7 +69,7 @@ let cardinal_test test_ctxt =
 
 let union_test test_ctxt = 
 	assert_equal
-		~msg: "#4 - Check union 6 elements"
+		~msg: "#7 - Check union 6 elements"
 		~printer: (print_conj string_of_int)
 		~cmp: igual
 		(Conjunto([1;4;7;9;2;3]))
@@ -77,52 +77,56 @@ let union_test test_ctxt =
 
 let interseccion_test test_ctxt = 
 	assert_equal
-		~msg: "#4 - Check bellow set"
-		~printer: string_of_bool
-		true
-		(pertenece 1 (Conjunto([1;2;3])));;
+		~msg: "#8 - Check intersection with 1 element"
+		~printer: (print_conj string_of_int)
+		~cmp: igual
+		(Conjunto([1;2;3]))
+		(interseccion (Conjunto([1;2;3;4])) (Conjunto([1;2;3])));;
 
 let diferencia_test test_ctxt = 
 	assert_equal
-		~msg: "#4 - Check bellow set"
-		~printer: string_of_bool
-		true
-		(pertenece 1 (Conjunto([1;2;3])));;
+		~msg: "#9 - Check diferencia minus 1 element"
+		~printer: (print_conj string_of_int)
+		~cmp: igual
+		(Conjunto([1;3;4]))
+		(diferencia (Conjunto([1;2;3;4])) (Conjunto([2])));;
 
 let incluido_test test_ctxt = 
 	assert_equal
-		~msg: "#4 - Check bellow set"
+		~msg: "#10 - Check simple include set"
 		~printer: string_of_bool
 		true
-		(pertenece 1 (Conjunto([1;2;3])));;
+		(incluido (Conjunto([1;3;4])) (Conjunto([1;2;3;4;6])));;
 
 let igual_test test_ctxt = 
 	assert_equal
-		~msg: "#4 - Check bellow set"
-		~printer: string_of_bool
-		true
-		(pertenece 1 (Conjunto([1;2;3])));;
+		~msg: "#11 - Check equals altered order"
+		~printer:  (print_conj string_of_int)
+		~cmp: igual
+		(Conjunto([2;1;3]))
+		(Conjunto([1;2;3]));;
 
 let list_of_conjunto_test test_ctxt = 
 	assert_equal
-		~msg: "#4 - Check bellow set"
-		~printer: string_of_bool
-		true
-		(pertenece 1 (Conjunto([1;2;3])));;
+		~msg: "#12 - Simple list test"
+		[1;2;3]
+		(list_of_conjunto (Conjunto([1;2;3])));;
 
 let cartesiano_test test_ctxt = 
+	todo "cartesiano not implemented";
 	assert_equal
-		~msg: "#4 - Check bellow set"
+		~msg: "#13 - Check cartesiano1"
 		~printer: string_of_bool
 		true
-		(pertenece 1 (Conjunto([1;2;3])));;
+		true;;
 
 let cartesiano2_test test_ctxt = 
+	todo "cartesiano2 not implemented";
 	assert_equal
-		~msg: "#4 - Check bellow set"
+		~msg: "#14 - Check cartesiano2"
 		~printer: string_of_bool
 		true
-		(pertenece 1 (Conjunto([1;2;3])));;
+		true;;
 
 (* Name the test cases and group them together *)
 let suite =
