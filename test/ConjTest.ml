@@ -153,12 +153,12 @@ let cartesiano_test test_ctxt =
 		(cartesiano (Conjunto([1;2])) (Conjunto([3;4])));;
 
 let cartesiano2_test test_ctxt = 
-	todo "cartesiano2 not implemented";
 	assert_equal
 		~msg: "#14 - Check cartesiano2"
-		~printer: string_of_bool
-		true
-		true;;
+		~printer: (print_conj string_of_int_pair)
+		~cmp: igual 
+		(Conjunto([1,3;1,4;2,3;2,4]))
+		(cartesiano2 (Conjunto([1;2])) (Conjunto([3;4])));;
 
 (* Name the test cases and group them together *)
 let suite =

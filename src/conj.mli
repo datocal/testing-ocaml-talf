@@ -21,6 +21,6 @@ val incluido : 'a conjunto -> 'a conjunto -> bool;;
 val igual : 'a conjunto -> 'a conjunto -> bool;;
 val list_of_conjunto : 'a conjunto -> 'a list;;
 val cartesiano : 'a conjunto -> 'b conjunto -> ('a * 'b) conjunto;;
-
+val cartesiano2 : 'a conjunto -> 'b conjunto -> ('a * 'b) conjunto;;
 (*****************************************************************************)
 
