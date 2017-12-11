@@ -86,11 +86,17 @@ let conjunto_of_list_test test_ctxt =
 
 let suprimir_test test_ctxt = 
 	assert_equal
-		~msg: "#5 - Check normal supr"
+		~msg: "#5.1 - Check normal supr"
 		~printer: (print_conj string_of_int)
 		~cmp: igual
 		(Conjunto([1;2;4]))
-		(suprimir 3 (Conjunto([1;2;3;4])));;
+		(suprimir 3 (Conjunto([1;2;3;4])));
+	assert_equal
+		~msg: "#5.2 - Check vacío supr"
+		~printer: (print_conj string_of_int)
+		~cmp: igual
+		(Conjunto[])
+		(suprimir 3 (Conjunto []));;
 
 let cardinal_test test_ctxt = 
 	assert_equal
@@ -113,7 +119,7 @@ let interseccion_test test_ctxt =
 		~printer: (print_conj string_of_int)
 		~cmp: igual
 		(Conjunto([1;2;3]))
-		(interseccion (Conjunto([1;2;3;4])) (Conjunto([1;2;3])));;
+		(interseccion (Conjunto([1;2;3;4])) (Conjunto([1;2;3;5])));;
 
 let diferencia_test test_ctxt = 
 	assert_equal
@@ -146,19 +152,44 @@ let list_of_conjunto_test test_ctxt =
 
 let cartesiano_test test_ctxt = 
 	assert_equal
-		~msg: "#13 - Check cartesiano1"
+		~msg: "#13.1 - Check cartesiano1"
 		~printer: (print_conj string_of_int_pair)
 		~cmp: igual 
 		(Conjunto([1,3;1,4;2,3;2,4]))
-		(cartesiano (Conjunto([1;2])) (Conjunto([3;4])));;
+		(cartesiano (Conjunto([1;2])) (Conjunto([3;4])));
+	assert_equal
+		~msg: "#13.2 - Check catesiano vacio 1"
+		~printer: (print_conj string_of_int_pair)
+		~cmp: igual
+		(Conjunto [])
+		(cartesiano (Conjunto []) (Conjunto([1;4;6])));
+	assert_equal
+		~msg: "#13.3 - Check catesiano vacio 2"
+		~printer: (print_conj string_of_int_pair)
+		~cmp: igual
+		(Conjunto [])
+		(cartesiano (Conjunto([1;4;6])) (Conjunto []));;
 
 let cartesiano2_test test_ctxt = 
 	assert_equal
-		~msg: "#14 - Check cartesiano2"
+		~msg: "#14.1 - Check cartesiano2"
 		~printer: (print_conj string_of_int_pair)
 		~cmp: igual 
 		(Conjunto([1,3;1,4;2,3;2,4]))
-		(cartesiano2 (Conjunto([1;2])) (Conjunto([3;4])));;
+		(cartesiano2 (Conjunto([1;2])) (Conjunto([3;4])));
+	assert_equal
+		~msg: "#14.2 - Check catesiano2 vacio 1"
+		~printer: (print_conj string_of_int_pair)
+		~cmp: igual
+		(Conjunto [])
+		(cartesiano2 (Conjunto []) (Conjunto([1;4;6])));
+	assert_equal
+		~msg: "#14.3 - Check catesiano2 vacio 2"
+		~printer: (print_conj string_of_int_pair)
+		~cmp: igual
+		(Conjunto [])
+		(cartesiano2 (Conjunto([1;4;6])) (Conjunto []));;
+
 
 (* Name the test cases and group them together *)
 let suite =
