@@ -1,0 +1,58 @@
+#!/bin/bash
+eval $(opam config env)
+echo -------------------------------------------------------------------------------------
+echo ------------------------------ RUNNING INTEGRATION TESTS ----------------------------
+#Remove the executables of the library
+rm ./src/*.cmi ./src/*.cma
+
+#Reccompile the library (output hidden)
+make all -C ./src/ > out.log 2> /dev/null
+
+#For each test, compile and run the test
+for f in ./test/*IT.ml; do
+	ocamlfind ocamlc -I ./src/ -I ./test/ -o $f-testrun -package bisect_ppx -package oUnit ./src/talf.cma -linkpkg -g $f
+	echo -------------------------------------------------------------------------------------
+	echo Running test:   $f
+	$f-testrun
+
+	#Remove innecesary output files
+	rm oUnit* ./test/*.cmi ./test/*.cmo $f-testrun
+
+done
+
+#Unit tests use the mock folder, so it's more complex
+echo -------------------------------------------------------------------------------------
+echo ----------------------------------- RUNNING UNIT TESTS ------------------------------
+
+rm ./src/*.cmi ./src/*.cma
+
+for f in ./test/*U.ml; do
+
+	#Copy all main src to temp folder
+	cp ./src/*.ml temp
+
+	#Copy all mocks to src, overwritting original code
+	cp ./mock/*.ml ./src
+	
+	#Copy the tested module to src, because it's the one who is going to be tested
+	t=${f#./test/}
+	y=${t%U.ml}
+	mv ./temp/$y.ml ./src
+
+	#Recompile the library using the mocks  (output hidden)
+	make all -C ./src/ > out.log 2> /dev/null
+
+	#Compile and run the test
+	ocamlfind ocamlc -I ./src/ -I ./test/ -o $f-testrun -package bisect_ppx -package oUnit ./src/talf.cma -linkpkg -g $f
+	echo -------------------------------------------------------------------------------------
+	echo Running test:  $f
+	$f-testrun
+	rm oUnit* ./test/*.cmi ./test/*.cmo $f-testrun
+
+	#Restore src with original sources
+	mv ./temp/*.ml ./src
+	
+done
+
+bisect-ppx-report -I ./src -html coverage/ bisect*.out
+rm bisect*.out
