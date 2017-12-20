@@ -1,4 +1,6 @@
 #!/bin/bash
+eval $(opam config env)
+
 for f in ./test/*.ml; do
 	ocamlfind ocamlc -I ./src/ -I ./test/ -o $f-testrun -package bisect_ppx -package oUnit ./src/talf.cma -linkpkg -g $f
 	echo --------------------------------------------------------------------
