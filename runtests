@@ -8,5 +8,5 @@ for f in ./test/*.ml; do
 	$f-testrun
 	rm oUnit* ./test/*.cmi ./test/*.cmo $f-testrun
 done
-bisect-ppx-report -I ./src -html coverage/ bisect*.out
-rm bisect*.out
+bisect-ppx-report -I ./src -I ./hack -html coverage/ bisect*.out
+rm bisect*.out src/bisect*.out
