@@ -28,11 +28,30 @@ let get_automata_correcto =
     Arco_af (Estado "2", Estado "3", Terminal "c")],
   Conj.Conjunto [Estado "1"; Estado "3"]);;
 
+let get_automata_correcto2 = 
+	Af
+ (Conj.Conjunto [Estado "0"; Estado "1"; Estado "2"; Estado "3"],
+  Conj.Conjunto [Terminal "a"; Terminal "b"; Terminal "c"], Estado "0",
+  Conj.Conjunto
+   [Arco_af (Estado "0", Estado "1", Terminal "a");
+    Arco_af (Estado "1", Estado "1", Terminal "b");
+    Arco_af (Estado "1", Estado "2", Terminal "a");
+    Arco_af (Estado "2", Estado "0", Terminal "");
+    Arco_af (Estado "2", Estado "3", Terminal "");
+    Arco_af (Estado "2", Estado "3", Terminal "c")],
+  Conj.Conjunto [Estado "0"; Estado "3"]);;
+
  let get_er_correcta = 
  	Auto.Union
  (Auto.Concatenacion
    (Auto.Constante (Auto.Terminal "a"), Auto.Constante (Auto.Terminal "be")),
   Auto.Repeticion (Auto.Constante (Auto.Terminal "ce")));;
+
+let get_epsilon_estrella = 
+	(Auto.Repeticion (Auto.Constante (Auto.Terminal "")));;
+
+let get_vacio_estrella =
+	(Auto.Repeticion Vacio);;
 
  let get_gic_correcta = 
  	Gic (Conj.Conjunto [No_terminal "S"; No_terminal "A"; No_terminal "B"],
@@ -100,7 +119,17 @@ let get_mt_correcta =
 		No_terminal "",
 		Conj.Conjunto [Estado "4"; Estado "7"]);;
 
-(* TESTS DEL MÓDULO AUTO *)
+
+
+(***********************************************************************************************************************************************************************************)
+(************************************************************************************* TESTS DEL MÓDULO AUTO ***********************************************************************)
+(***********************************************************************************************************************************************************************************)
+
+let rec gen_list l = function 
+	0 -> l
+	| n -> gen_list ((Terminal "b")::l) (n-1);;
+
+
 let escaner_af_test test_ctxt = 
 	assert_equal
 		~msg: "#1.1 - Check accept path"
@@ -109,11 +138,27 @@ let escaner_af_test test_ctxt =
 	assert_equal
 		~msg: "#1.2 - Check dont accept path"
 		true
-		(escaner_af [Terminal "a";Terminal "a"] get_automata_correcto);;
+		(escaner_af [Terminal "a";Terminal "a"] get_automata_correcto);
+	assert_equal
+		~msg: "#1.3 - Check not in language"
+		false
+		(escaner_af [Terminal "w";Terminal "k"] get_automata_correcto);
+	assert_equal
+		~msg: "#1.4 - Check big list"
+		true
+		(escaner_af ((Terminal "a")::(gen_list [] 10000)) get_automata_correcto);
+	assert_equal
+		~msg: "#1.5 - Check empty list - false"
+		false
+		(escaner_af ([]) get_automata_correcto);
+	assert_equal
+		~msg: "#1.6 - Check empty list - true"
+		true
+		(escaner_af ([]) get_automata_correcto2);;
 
 let af_of_er_test test_ctxt =
 	assert_equal
-		~msg: "#2 - Check af from er"
+		~msg: "#2.1 - Check af from er"
 		(
 			Af
 			 (Conj.Conjunto
@@ -131,7 +176,34 @@ let af_of_er_test test_ctxt =
 			    Arco_af (Estado "7", Estado "5", Terminal "")],
 			  Conj.Conjunto [Estado "4"; Estado "5"])
 		)
-		(af_of_er get_er_correcta);;
+		(af_of_er get_er_correcta);
+	
+	
+	(*The following two automatas should be equivalent, but we haven't a properly comparision function*)	
+	assert_equal
+		~msg: "#2.3 - Check af from epsilon_estrella"
+		(
+			Af
+			 (Conjunto [Estado "0"; Estado "1"], Conjunto [], Estado "0",
+  			 Conjunto[
+  			 	Arco_af (Estado "0", Estado "1", Terminal "");
+    		    Arco_af (Estado "1", Estado "0", Terminal "")],
+ 			 Conjunto [Estado "0"])
+
+		)
+		(af_of_er get_epsilon_estrella);
+
+	assert_equal
+		~msg: "#2.4 - Check af from vacio_estrella"
+		(
+			Af
+			 (Conjunto [Estado "0"; Estado "1"], Conjunto [], Estado "0",
+   			  Conjunto 
+ 			 	[Arco_af (Estado "0", Estado "1", Terminal "")],
+  			  Conjunto [Estado "0"])
+		)
+		(af_of_er get_vacio_estrella);;
+
 
 let avanza_test test_ctxt = 
 	assert_equal
