@@ -1,3 +1,9 @@
+Testing de librería de ocaml de Teoría de computación.
+-------------
+Este repositorio contiene pruebas automatizadas de una librería de una asignatura del Grado en Ingeniería Informática de la universidad de Coruña.
+La realización de las pruebas fue una práctica para la asignatura de Validación y Verificación de Software.
+No se está manteniendo este repositorio.
+
 Instrucciones
 -------------
 
